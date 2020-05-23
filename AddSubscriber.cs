@@ -25,7 +25,7 @@ namespace newsletter
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "email/")]
             HttpRequest req,
-            [Table("Subscribers")] CloudTable subscribersTable,
+            [Table(TableConstants.Subscribers)] CloudTable subscribersTable,
             ILogger log)
         {
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -38,7 +38,7 @@ namespace newsletter
                 return new BadRequestResult();
 
             subscriber.RowKey = Guid.NewGuid().ToString();
-            subscriber.PartitionKey = "Subscribers";
+            subscriber.PartitionKey = TableConstants.Subscribers;
 
             // TODO send verification email
 

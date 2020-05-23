@@ -32,7 +32,7 @@ namespace newsletter
         [FunctionName("NewUrl")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "url/")] HttpRequest req,
-            [Table("NewsletterItems")] CloudTable newsletterItemsTable,
+            [Table(TableConstants.NewsletterItems)] CloudTable newsletterItemsTable,
             ILogger log)
         {
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -45,7 +45,7 @@ namespace newsletter
                 return new BadRequestResult();
 
             newsletterItem.RowKey = Guid.NewGuid().ToString();
-            newsletterItem.PartitionKey = "NewsletterItems";
+            newsletterItem.PartitionKey = TableConstants.NewsletterItems;
             
             await newsletterItemsTable.ExecuteAsync(TableOperation.Insert(newsletterItem));
             
