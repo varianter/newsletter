@@ -8,19 +8,13 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Table;
+using newsletter.Model;
 using Newtonsoft.Json;
 
 namespace newsletter
 {
     public static class NewUrl
     {
-        private class NewsletterItem : TableEntity
-        {
-            public string Url { get; set; }
-            public string Description { get; set; }
-            public string Tags  { get; set; }
-        }
-
         private static bool IsValidUrl(this string url)
         {
             if (!Regex.IsMatch(url, @"^https?:\/\/", RegexOptions.IgnoreCase))

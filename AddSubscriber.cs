@@ -8,17 +8,13 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Table;
+using newsletter.Model;
 using Newtonsoft.Json;
 
 namespace newsletter
 {
     public static class AddSubscriber
     {
-        private class Subscriber : TableEntity
-        {
-            public string Email { get; set; }
-        }
-
         private static bool IsValidEmail(this string email) => new EmailAddressAttribute().IsValid(email);
 
         [FunctionName("AddSubscriber")]
