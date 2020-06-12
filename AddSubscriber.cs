@@ -19,7 +19,7 @@ namespace newsletter
 
         [FunctionName("AddSubscriber")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "email/")]
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "subscribe/")]
             HttpRequest req,
             [Table(TableConstants.Subscribers)] CloudTable subscribersTable,
             ILogger log)
