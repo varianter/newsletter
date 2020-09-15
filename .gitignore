@@ -4,6 +4,9 @@
 # Azure Functions localsettings file
 local.settings.json
 
+#Azurite
+__azurite*
+
 # User-specific files
 *.suo
 *.user
