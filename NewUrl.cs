@@ -1,15 +1,13 @@
 using System;
-using System.IO;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using AzureFunctions.Extensions.Swashbuckle.Attribute;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Table;
 using newsletter.Model;
-using Newtonsoft.Json;
 
 namespace newsletter
 {
@@ -23,15 +21,14 @@ namespace newsletter
             return Uri.TryCreate(url, UriKind.Absolute, out _);
         }
         
+        [ProducesResponseType(typeof(INewsletterItem), (int) HttpStatusCode.OK)]
         [FunctionName("NewUrl")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "url/")] HttpRequest req,
-            [Table(TableConstants.NewsletterItems)] CloudTable newsletterItemsTable,
-            ILogger log)
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "url/")] 
+            [RequestBodyType(typeof(INewsletterItem), "Newsletter model")]
+            NewsletterItem newsletterItem,
+            [Table(TableConstants.NewsletterItems)] CloudTable newsletterItemsTable)
         {
-            var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            var newsletterItem = JsonConvert.DeserializeObject<NewsletterItem>(requestBody);
-
             if(newsletterItem == null)
                 return new BadRequestResult();
             
@@ -43,7 +40,12 @@ namespace newsletter
             
             await newsletterItemsTable.ExecuteAsync(TableOperation.Insert(newsletterItem));
             
-            return new OkObjectResult(newsletterItem);
+            return new OkObjectResult(new
+            {
+                newsletterItem.Url,
+                newsletterItem.Description,
+                newsletterItem.Tags
+            });
         }
     }
 }

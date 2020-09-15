@@ -2,10 +2,13 @@
 
 namespace newsletter.Model
 {
-    public class Subscriber : TableEntity
+    public interface ISubscriber
     {
         public string Email { get; set; }
     }
     
-
+    public class Subscriber : TableEntity, ISubscriber
+    {
+        public string Email { get; set; }
+    }
 }
